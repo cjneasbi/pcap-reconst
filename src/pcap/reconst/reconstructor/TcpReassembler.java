@@ -62,8 +62,8 @@ public class TcpReassembler {
 				int startpos = buf.length();
 				buf.append(new String(data));
 				packetPositions.put(buf.length(), i);
-				if (log.isInfoEnabled()) {
-					log.info("Start position: " + startpos + " End position: "
+				if (log.isDebugEnabled()) {
+					log.debug("Start position: " + startpos + " End position: "
 							+ buf.length() + "\n" + new String(data));
 				}
 			}
@@ -80,8 +80,8 @@ public class TcpReassembler {
 		int beginIndex = this.packetData.indexOf(needle);
 		int endIndex = beginIndex + needle.length();
 
-		if (log.isInfoEnabled()) {
-			log.info("Find timestamp for:\n" + needle + "\nbegin index: "
+		if (log.isDebugEnabled()) {
+			log.debug("Find timestamp for:\n" + needle + "\nbegin index: "
 					+ beginIndex + " end index: " + endIndex);
 		}
 
