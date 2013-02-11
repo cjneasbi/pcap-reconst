@@ -5,6 +5,6 @@
 package pcap.reconst.compression;
 
 public interface Zip {
-    public byte[] zip();
+	public byte[] zip();
 
 }

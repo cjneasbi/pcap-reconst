@@ -3,10 +3,11 @@
  */
 package pcap.reconst.reconstructor;
 
-import pcap.reconst.beans.TcpConnection;
-
 import java.util.Map;
 
+import pcap.reconst.beans.TcpConnection;
+
 public interface Reconstructor {
-    Map<TcpConnection, TcpReassembler> reconstruct(String filename) throws Exception;
+	Map<TcpConnection, TcpReassembler> reconstruct(String filename)
+			throws Exception;
 }
