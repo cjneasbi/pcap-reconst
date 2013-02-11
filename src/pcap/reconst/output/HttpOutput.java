@@ -4,14 +4,15 @@
 
 package pcap.reconst.output;
 
-import pcap.reconst.beans.InputData;
+import pcap.reconst.beans.HTTPRequest;
+import pcap.reconst.beans.HTTPResponse;
 
 public class HttpOutput {
 	private byte[] payload;
-	private InputData request;
-	private InputData response;
+	private HTTPRequest request;
+	private HTTPResponse response;
 
-	public HttpOutput(byte[] payload, InputData request, InputData response) {
+	public HttpOutput(byte[] payload, HTTPRequest request, HTTPResponse response) {
 		this.payload = payload;
 		this.request = request;
 		this.response = response;
@@ -21,11 +22,11 @@ public class HttpOutput {
 		return payload;
 	}
 
-	public InputData getRequest() {
+	public HTTPRequest getRequest() {
 		return request;
 	}
 
-	public InputData getResponse() {
+	public HTTPResponse getResponse() {
 		return response;
 	}
 }

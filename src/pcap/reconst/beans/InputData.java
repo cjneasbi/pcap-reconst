@@ -7,9 +7,9 @@ package pcap.reconst.beans;
 import pcap.reconst.Utils;
 
 public class InputData {
-	private byte[] data;
-	private Headers headers;
-	private TimestampPair ts;
+	protected byte[] data;
+	protected Headers headers;
+	protected TimestampPair ts;
 
 	public InputData(byte[] data, Headers headers, TimestampPair ts) {
 		this.data = data;
@@ -20,7 +20,19 @@ public class InputData {
 	public TimestampPair getTimestamps() {
 		return ts;
 	}
+	
+	protected void setData(byte[] data){
+		this.data = data;
+	}
 
+	protected void setTimestamps(TimestampPair ts){
+		this.ts = ts;
+	}
+	
+	protected void setHeaders(Headers headers){
+		this.headers = headers;
+	}
+	
 	public Headers getHeaders() {
 		return headers;
 	}

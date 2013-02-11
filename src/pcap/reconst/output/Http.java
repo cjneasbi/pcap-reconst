@@ -11,14 +11,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import pcap.reconst.beans.Headers;
-import pcap.reconst.beans.InputData;
+import pcap.reconst.beans.HTTPRequest;
+import pcap.reconst.beans.HTTPResponse;
 import pcap.reconst.beans.TcpConnection;
-import pcap.reconst.beans.TimestampPair;
 import pcap.reconst.reconstructor.TcpReassembler;
 
 public class Http {
@@ -143,8 +141,8 @@ public class Http {
 			log.debug("total length " + flow.length());
 		}
 		if (this.hasRequestData(flow)) {
-			InputData request;
-			InputData response = null;
+			HTTPRequest request;
+			HTTPResponse response = null;
 
 			if (this.hasResponseData(flow)) {
 				int responseIndex = this.responseStart(flow);
@@ -160,53 +158,34 @@ public class Http {
 		return null;
 	}
 
-	private InputData getResponse(String data, int responseLength,
+	private HTTPResponse getResponse(String data, int responseLength,
 			int responseIndex, TcpReassembler assembler) {
 		byte[] response = new byte[responseLength];
 		System.arraycopy(data.getBytes(), responseIndex, response, ZERO,
 				responseLength);
-		String responseAsString = new String(response);
-		Headers responseHeaders = getHeaders(responseAsString);
-		TimestampPair tsPair = assembler.getTimestampRange(responseAsString);
+		HTTPResponse responseobj = new HTTPResponse(response, 
+				assembler.getTimestampRange(new String(response)));
 		if (log.isDebugEnabled()) {
-			log.debug(responseHeaders);
-			int responseContentLength = responseHeaders.getContentLength();
+			log.debug(responseobj.getHeaders());
+			int responseContentLength = responseobj.getHeaders()
+					.getContentLength();
 			log.debug(responseContentLength);
 		}
-		return new InputData(response, responseHeaders, tsPair);
+		return responseobj;
 	}
 
-	private InputData getRequest(String data, int responseIndex,
+	private HTTPRequest getRequest(String data, int responseIndex,
 			TcpReassembler assembler) {
 		byte[] request = new byte[responseIndex];
 		System.arraycopy(data.getBytes(), ZERO, request, ZERO, responseIndex);
-		String requestAsString = new String(request);
-		Headers requestHeaders = getHeaders(requestAsString);
-		TimestampPair tsPair = assembler.getTimestampRange(requestAsString);
+		HTTPRequest requestobj = new HTTPRequest(request, 
+				assembler.getTimestampRange(new String(request)));
 		if (log.isDebugEnabled()) {
-			log.debug(requestHeaders);
-			int requestContentLength = requestHeaders.getContentLength();
+			log.debug(requestobj.getHeaders());
+			int requestContentLength = requestobj.getHeaders()
+					.getContentLength();
 			log.debug(requestContentLength);
 		}
-		return new InputData(request, requestHeaders, tsPair);
-	}
-
-	private static Headers getHeaders(String stringWithHeaders) {
-		Headers headers = new Headers();
-		String[] tokens = stringWithHeaders.split("\r\n");
-		for (String token : tokens) {
-			if (StringUtils.isEmpty(token)) {
-				break;
-			}
-			if (token.contains(": ")) {
-				String[] values = token.split(": ");
-				if (values.length > 1) {
-					headers.addHeader(values[0], values[1]);
-				} else {
-					headers.addHeader(values[0], null);
-				}
-			}
-		}
-		return headers;
+		return requestobj;
 	}
 }
