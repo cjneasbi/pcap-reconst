@@ -22,14 +22,11 @@ public class HTTPRequest extends HTTPMessage {
 		String retval = "http://";
 		if(host != null){
 			retval += host;
-			if(this.conn.getDstPort() != 80){
-				retval = retval + ":" + conn.getDstPort();
-			}
 		} else {
 			retval += this.conn.getDstIp().toString().replace("/", "");
-			if(this.conn.getDstPort() != 80){
-				retval = retval + ":" + conn.getDstPort();
-			}
+		}
+		if(this.conn.getDstPort() != 80){
+			retval = retval + ":" + conn.getDstPort();
 		}
 		return retval + this.getPath();
 	}
