@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 
 import pcap.reconst.beans.HTTPRequest;
 import pcap.reconst.beans.HTTPResponse;
+import pcap.reconst.beans.MessageMetadata;
 import pcap.reconst.beans.TcpConnection;
 import pcap.reconst.reconstructor.TcpReassembler;
 
@@ -163,8 +164,8 @@ public class Http {
 		byte[] response = new byte[responseLength];
 		System.arraycopy(data.getBytes(), responseIndex, response, ZERO,
 				responseLength);
-		HTTPResponse responseobj = new HTTPResponse(response, 
-				assembler.getTimestampRange(new String(response)));
+		MessageMetadata mdata = assembler.getMessageMetadata(new String(response));
+		HTTPResponse responseobj = new HTTPResponse(response, mdata);
 		if (log.isDebugEnabled()) {
 			log.debug(responseobj.getHeaders());
 			int responseContentLength = responseobj.getHeaders()
@@ -178,8 +179,8 @@ public class Http {
 			TcpReassembler assembler) {
 		byte[] request = new byte[responseIndex];
 		System.arraycopy(data.getBytes(), ZERO, request, ZERO, responseIndex);
-		HTTPRequest requestobj = new HTTPRequest(request, 
-				assembler.getTimestampRange(new String(request)));
+		MessageMetadata mdata = assembler.getMessageMetadata(new String(request));
+		HTTPRequest requestobj = new HTTPRequest(request, mdata);
 		if (log.isDebugEnabled()) {
 			log.debug(requestobj.getHeaders());
 			int requestContentLength = requestobj.getHeaders()

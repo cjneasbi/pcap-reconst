@@ -15,6 +15,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import pcap.reconst.beans.MessageMetadata;
 import pcap.reconst.beans.TcpConnection;
 import pcap.reconst.beans.TcpSequenceCounter;
 import pcap.reconst.beans.TimestampPair;
@@ -70,8 +71,8 @@ public class TcpReassembler {
 		}
 		packetData = buf.toString();
 	}
-
-	public TimestampPair getTimestampRange(String needle) {
+	
+	public MessageMetadata getMessageMetadata(String needle){
 		if (rebuildData || packetData == null) {
 			buildPacketData();
 			rebuildData = false;
@@ -85,33 +86,52 @@ public class TcpReassembler {
 					+ beginIndex + " end index: " + endIndex);
 		}
 
-		double startTS = -1.0, endTS = -1.0;
+		TcpPacket startPacket = null, endPacket = null;
 
 		List<Integer> positions = new ArrayList<Integer>(
 				packetPositions.keySet());
 		Collections.sort(positions);
 
 		for (int pos : positions) {
-			if (startTS < 0.0 && beginIndex < pos) {
-				TcpPacket packet = orderedPackets.get(packetPositions.get(pos));
-				startTS = Double.parseDouble(packet.getTimestampSec() + "."
-						+ packet.getTimestampUSec());
+			if (startPacket == null && beginIndex < pos) {
+				startPacket = orderedPackets.get(packetPositions.get(pos));
 			}
-			if (endTS < 0.0 && endIndex <= pos) {
-				TcpPacket packet = orderedPackets.get(packetPositions.get(pos));
-				endTS = Double.parseDouble(packet.getTimestampSec() + "."
-						+ packet.getTimestampUSec());
+			if (endPacket == null && endIndex <= pos) {
+				endPacket = orderedPackets.get(packetPositions.get(pos));
 			}
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("start: " + startTS + " end: " + endTS);
+		if (startPacket != null) {
+			double startTS = Double.parseDouble(startPacket.getTimestampSec() + "."
+					+ startPacket.getTimestampUSec());
+			double endTS = Double.parseDouble(endPacket.getTimestampSec() + "."
+					+ endPacket.getTimestampUSec());
+			TimestampPair ts = new TimestampPair(startTS, endTS);
+			TcpConnection conn = new TcpConnection(startPacket);
+			
+			if (log.isDebugEnabled()) {
+				log.debug(ts + "\n" + conn);
+			}
+			
+			return new MessageMetadata(ts,conn);
 		}
 
-		if (startTS > -1.0) {
-			return new TimestampPair(startTS, endTS);
-		}
+		return null;		
+	}
 
+	public TcpConnection getTcpConnection(String needle){
+		MessageMetadata mdata = this.getMessageMetadata(needle);
+		if(mdata != null){
+			return mdata.getTcpConnection();
+		}
+		return null;
+	}
+	
+	public TimestampPair getTimestampRange(String needle) {
+		MessageMetadata mdata = this.getMessageMetadata(needle);
+		if(mdata != null){
+			return mdata.getTimestamps();
+		}
 		return null;
 	}
 

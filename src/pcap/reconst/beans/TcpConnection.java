@@ -73,11 +73,6 @@ public class TcpConnection implements Comparable<TcpConnection> {
 				+ dstIp.toString().replace("/", "") + "." + dstPort;
 	}
 
-	/*
-	 * public String getFileName(String path) { return
-	 * String.format("%s%s.data", path, toString()); }
-	 */
-
 	@Override
 	public int compareTo(TcpConnection other) {
 		if (this.equals(other)) {
