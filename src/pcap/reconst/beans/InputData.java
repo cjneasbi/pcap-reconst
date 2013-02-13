@@ -4,6 +4,8 @@
 
 package pcap.reconst.beans;
 
+import java.util.Arrays;
+
 import pcap.reconst.Utils;
 
 public class InputData {
@@ -47,6 +49,15 @@ public class InputData {
 
 	public int getContentLength() {
 		return headers.getContentLength();
+	}
+	
+	public boolean equals(Object obj){
+		if(obj instanceof InputData){
+			InputData obji = (InputData)obj;
+			return Arrays.equals(this.data, obji.data) && 
+					this.headers.equals(obji.headers) && this.ts.equals(obji.ts);
+		}
+		return false;
 	}
 
 	@Override

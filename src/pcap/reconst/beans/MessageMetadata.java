@@ -44,6 +44,14 @@ public class MessageMetadata {
 		return this.conn.getDstPort();
 	}
 	
+	public boolean equals(Object obj){
+		if(obj instanceof MessageMetadata){
+			MessageMetadata objm = (MessageMetadata)obj;
+			return this.conn.equals(objm.conn) && this.ts.equals(objm.ts);
+		}
+		return false;
+	}
+	
 	
 	
 }

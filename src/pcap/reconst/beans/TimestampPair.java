@@ -20,6 +20,14 @@ public class TimestampPair {
 	public double getEndTS() {
 		return this.endTS;
 	}
+	
+	public boolean equals(Object obj){
+		if(obj instanceof TimestampPair){
+			TimestampPair objp = (TimestampPair)obj;
+			return this.startTS == objp.startTS && this.endTS == objp.endTS;
+		}
+		return false;
+	}
 
 	@Override
 	public String toString() {

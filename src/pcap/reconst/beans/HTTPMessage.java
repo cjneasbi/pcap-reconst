@@ -67,4 +67,12 @@ public class HTTPMessage extends InputData {
 	public int getDstPort() {
 		return this.conn.getDstPort();
 	}
+	
+	public boolean equals(Object obj){
+		if(obj instanceof HTTPMessage){
+			HTTPMessage objm = (HTTPMessage)obj;
+			return super.equals(objm) && this.conn.equals(objm.conn);
+		}
+		return false;
+	}
 }

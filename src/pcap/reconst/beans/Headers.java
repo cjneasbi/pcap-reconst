@@ -65,6 +65,14 @@ public class Headers {
 	public String toString() {
 		return headers.toString();
 	}
+	
+	public boolean equals(Object obj){
+		if(obj instanceof Headers){
+			Headers objh = (Headers)obj;
+			return this.headers.equals(objh.headers);
+		}
+		return false;
+	}
 
 	public int getContentLength() {
 		String contentLength = getValue(CONTENT_LENGTH);
