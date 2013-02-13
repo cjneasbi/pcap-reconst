@@ -22,19 +22,19 @@ public class InputData {
 	public TimestampPair getTimestamps() {
 		return ts;
 	}
-	
-	protected void setData(byte[] data){
+
+	protected void setData(byte[] data) {
 		this.data = data;
 	}
 
-	protected void setTimestamps(TimestampPair ts){
+	protected void setTimestamps(TimestampPair ts) {
 		this.ts = ts;
 	}
-	
-	protected void setHeaders(Headers headers){
+
+	protected void setHeaders(Headers headers) {
 		this.headers = headers;
 	}
-	
+
 	public Headers getHeaders() {
 		return headers;
 	}
@@ -50,12 +50,14 @@ public class InputData {
 	public int getContentLength() {
 		return headers.getContentLength();
 	}
-	
-	public boolean equals(Object obj){
-		if(obj instanceof InputData){
-			InputData obji = (InputData)obj;
-			return Arrays.equals(this.data, obji.data) && 
-					this.headers.equals(obji.headers) && this.ts.equals(obji.ts);
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof InputData) {
+			InputData obji = (InputData) obj;
+			return Arrays.equals(this.data, obji.data)
+					&& this.headers.equals(obji.headers)
+					&& this.ts.equals(obji.ts);
 		}
 		return false;
 	}

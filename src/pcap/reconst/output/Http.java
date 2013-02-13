@@ -164,7 +164,8 @@ public class Http {
 		byte[] response = new byte[responseLength];
 		System.arraycopy(data.getBytes(), responseIndex, response, ZERO,
 				responseLength);
-		MessageMetadata mdata = assembler.getMessageMetadata(new String(response));
+		MessageMetadata mdata = assembler.getMessageMetadata(new String(
+				response));
 		HTTPResponse responseobj = new HTTPResponse(response, mdata);
 		if (log.isDebugEnabled()) {
 			log.debug(responseobj.getHeaders());
@@ -179,7 +180,8 @@ public class Http {
 			TcpReassembler assembler) {
 		byte[] request = new byte[responseIndex];
 		System.arraycopy(data.getBytes(), ZERO, request, ZERO, responseIndex);
-		MessageMetadata mdata = assembler.getMessageMetadata(new String(request));
+		MessageMetadata mdata = assembler
+				.getMessageMetadata(new String(request));
 		HTTPRequest requestobj = new HTTPRequest(request, mdata);
 		if (log.isDebugEnabled()) {
 			log.debug(requestobj.getHeaders());

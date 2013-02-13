@@ -8,13 +8,13 @@ public class HTTPResponse extends HTTPMessage {
 			int srcport, InetAddress dst, int dstport) {
 		super(data, ts, src, srcport, dst, dstport);
 	}
-	
-	public HTTPResponse(byte[] data, MessageMetadata mdata){
+
+	public HTTPResponse(byte[] data, MessageMetadata mdata) {
 		super(data, mdata);
 	}
-	
-	public HTTPResponse(byte[] data, TimestampPair ts, TcpConnection conn){
+
+	public HTTPResponse(byte[] data, TimestampPair ts, TcpConnection conn) {
 		super(data, ts, conn);
 	}
-	
+
 }

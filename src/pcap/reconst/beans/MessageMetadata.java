@@ -6,52 +6,51 @@ public class MessageMetadata {
 
 	private TimestampPair ts;
 	private TcpConnection conn;
-	
-	public MessageMetadata(TimestampPair ts, TcpConnection conn){
+
+	public MessageMetadata(TimestampPair ts, TcpConnection conn) {
 		this.ts = ts;
 		this.conn = conn;
 	}
-	
-	public TimestampPair getTimestamps(){
+
+	public TimestampPair getTimestamps() {
 		return this.ts;
 	}
-	
-	public double getStartTS(){
+
+	public double getStartTS() {
 		return this.ts.getStartTS();
 	}
-	
-	public double getEndTS(){
+
+	public double getEndTS() {
 		return this.ts.getEndTS();
 	}
-	
-	public TcpConnection getTcpConnection(){
+
+	public TcpConnection getTcpConnection() {
 		return this.conn;
 	}
-	
-	public InetAddress getSrcIp(){
+
+	public InetAddress getSrcIp() {
 		return this.conn.getSrcIp();
 	}
-	
-	public InetAddress getDstIp(){
+
+	public InetAddress getDstIp() {
 		return this.conn.getDstIp();
 	}
-	
-	public int getSrcPort(){
+
+	public int getSrcPort() {
 		return this.conn.getSrcPort();
 	}
-	
-	public int getDstPort(){
+
+	public int getDstPort() {
 		return this.conn.getDstPort();
 	}
-	
-	public boolean equals(Object obj){
-		if(obj instanceof MessageMetadata){
-			MessageMetadata objm = (MessageMetadata)obj;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof MessageMetadata) {
+			MessageMetadata objm = (MessageMetadata) obj;
 			return this.conn.equals(objm.conn) && this.ts.equals(objm.ts);
 		}
 		return false;
 	}
-	
-	
-	
+
 }

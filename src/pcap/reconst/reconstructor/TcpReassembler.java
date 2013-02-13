@@ -71,8 +71,8 @@ public class TcpReassembler {
 		}
 		packetData = buf.toString();
 	}
-	
-	public MessageMetadata getMessageMetadata(String needle){
+
+	public MessageMetadata getMessageMetadata(String needle) {
 		if (rebuildData || packetData == null) {
 			buildPacketData();
 			rebuildData = false;
@@ -102,34 +102,34 @@ public class TcpReassembler {
 		}
 
 		if (startPacket != null) {
-			double startTS = Double.parseDouble(startPacket.getTimestampSec() + "."
-					+ startPacket.getTimestampUSec());
+			double startTS = Double.parseDouble(startPacket.getTimestampSec()
+					+ "." + startPacket.getTimestampUSec());
 			double endTS = Double.parseDouble(endPacket.getTimestampSec() + "."
 					+ endPacket.getTimestampUSec());
 			TimestampPair ts = new TimestampPair(startTS, endTS);
 			TcpConnection conn = new TcpConnection(startPacket);
-			
+
 			if (log.isDebugEnabled()) {
 				log.debug(ts + "\n" + conn);
 			}
-			
-			return new MessageMetadata(ts,conn);
+
+			return new MessageMetadata(ts, conn);
 		}
 
-		return null;		
+		return null;
 	}
 
-	public TcpConnection getTcpConnection(String needle){
+	public TcpConnection getTcpConnection(String needle) {
 		MessageMetadata mdata = this.getMessageMetadata(needle);
-		if(mdata != null){
+		if (mdata != null) {
 			return mdata.getTcpConnection();
 		}
 		return null;
 	}
-	
+
 	public TimestampPair getTimestampRange(String needle) {
 		MessageMetadata mdata = this.getMessageMetadata(needle);
-		if(mdata != null){
+		if (mdata != null) {
 			return mdata.getTimestamps();
 		}
 		return null;
