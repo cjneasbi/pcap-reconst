@@ -102,10 +102,8 @@ public class TcpReassembler {
 		}
 
 		if (startPacket != null) {
-			double startTS = Double.parseDouble(startPacket.getTimestampSec()
-					+ "." + startPacket.getTimestampUSec());
-			double endTS = Double.parseDouble(endPacket.getTimestampSec() + "."
-					+ endPacket.getTimestampUSec());
+			double startTS = startPacket.getTimestampSec() + (startPacket.getTimestampUSec()/1000000.0);		
+			double endTS = endPacket.getTimestampSec() + (endPacket.getTimestampUSec()/1000000.0);
 			TimestampPair ts = new TimestampPair(startTS, endTS);
 			TcpConnection conn = new TcpConnection(startPacket);
 
