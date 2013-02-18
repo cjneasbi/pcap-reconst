@@ -16,5 +16,14 @@ public class HTTPResponse extends HTTPMessage {
 	public HTTPResponse(byte[] data, TimestampPair ts, TcpConnection conn) {
 		super(data, ts, conn);
 	}
+	
+	public int getStatus(){
+		return (int)this.getStatusFloat();
+	}
+	
+	public float getStatusFloat(){
+		String[] parts = new String(this.data).split("\r\n", 2)[0].split("\\s");
+		return Float.parseFloat(parts[1]);
+	}
 
 }
