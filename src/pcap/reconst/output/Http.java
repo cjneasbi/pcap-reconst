@@ -102,14 +102,7 @@ public class Http {
 		List<HttpOutput> outputlist = new ArrayList<HttpOutput>();
 		if (this.hasRequestData(flowbuf)) {
 
-			List<String> flows;
-			if (this.numRequests(flowbuf) > 1) {
-				flows = this.splitFlows(flowbuf);
-			} else {
-				flows = new ArrayList<String>();
-				flows.add(flowbuf);
-			}
-
+			List<String> flows = this.splitFlows(flowbuf);
 			for (String flow : flows) {
 				try {
 					HttpOutput httpOutput = toHttp(flow, assembler);
@@ -161,9 +154,7 @@ public class Http {
 
 	private HTTPResponse getResponse(String data, int responseLength,
 			int responseIndex, TcpReassembler assembler) {
-		byte[] response = new byte[responseLength];
-		System.arraycopy(data.getBytes(), responseIndex, response, ZERO,
-				responseLength);
+		byte[] response = data.substring(responseIndex).getBytes();
 		MessageMetadata mdata = assembler.getMessageMetadata(new String(
 				response));
 		HTTPResponse responseobj = new HTTPResponse(response, mdata);
@@ -178,8 +169,7 @@ public class Http {
 
 	private HTTPRequest getRequest(String data, int responseIndex,
 			TcpReassembler assembler) {
-		byte[] request = new byte[responseIndex];
-		System.arraycopy(data.getBytes(), ZERO, request, ZERO, responseIndex);
+		byte[] request = data.substring(ZERO, responseIndex).getBytes();
 		MessageMetadata mdata = assembler
 				.getMessageMetadata(new String(request));
 		HTTPRequest requestobj = new HTTPRequest(request, mdata);

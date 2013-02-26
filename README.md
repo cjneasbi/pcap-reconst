@@ -24,3 +24,8 @@ Usage
 -----
 
 See the FileDataReconstructor class in the pcap.reconst.example package for usage.
+
+Todo
+----
+* Test with chunked transfer encoding.
+* Handle pipelining.
