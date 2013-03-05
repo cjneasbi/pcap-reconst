@@ -28,4 +28,3 @@ See the FileDataReconstructor class in the pcap.reconst.example package for usag
 Todo
 ----
 * Test with chunked transfer encoding.
-* Handle pipelining.

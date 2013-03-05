@@ -71,6 +71,52 @@ public class TcpReassembler {
 		}
 		packetData = buf.toString();
 	}
+	
+	//start and end are indexes in the reconstructed output
+	//returns true iff there are missing packets in between the packets that
+	//contributed the start index and the end index in the reconstructed 
+	//output
+	public boolean errorBetween(int start, int end){
+		if(start > end){
+			throw new RuntimeException("start: " + start + " must be <= end: " + end);
+		}
+		
+		List<Integer> positions = new ArrayList<Integer>(
+				packetPositions.keySet());
+		Collections.sort(positions);
+		int startPacket = -1, endPacket = -1;
+		
+		for (int pos : positions) {
+			if (startPacket == -1 && start < pos) {
+				startPacket = packetPositions.get(pos);
+			}
+			if (endPacket == -1 && end <= pos) {
+				endPacket = packetPositions.get(pos);
+			}
+		}
+		
+		if(log.isDebugEnabled()){
+			log.debug("Looking for error between packets " + startPacket + 
+					" and " + endPacket);
+			log.debug(new String(orderedPackets.get(startPacket).getData()));
+			log.debug(new String(orderedPackets.get(endPacket).getData()));
+			String logval = "Error packets:\n";
+			for(int i = 0; i < orderedPackets.size(); i++){
+				if(orderedPackets.get(i) instanceof PlaceholderTcpPacket){
+					logval += i + "\n";
+				}
+			}
+			log.debug(logval);
+		}
+		
+		for(int i = startPacket; i < endPacket; i++){
+			if(orderedPackets.get(i) instanceof PlaceholderTcpPacket){
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	public MessageMetadata getMessageMetadata(String needle) {
 		if (rebuildData || packetData == null) {
