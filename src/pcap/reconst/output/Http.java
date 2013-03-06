@@ -321,10 +321,16 @@ public class Http {
 		Map<TcpConnection, List<HttpOutput>> httpPackets = new HashMap<TcpConnection, List<HttpOutput>>();
 
 		for (TcpConnection connection : map.keySet()) {
-			httpPackets
-					.put(connection, this.packetizeFlow(connection, map.get(connection)));
-			if (log.isDebugEnabled()) {
-				log.debug("Processed stream: " + connection);
+			try{
+				httpPackets
+						.put(connection, this.packetizeFlow(connection, map.get(connection)));
+				if (log.isDebugEnabled()) {
+					log.debug("Processed stream: " + connection);
+				}
+			} catch (Exception e) {
+				if(log.isErrorEnabled()){
+					log.error("Error processing stream: " + connection, e);
+				}
 			}
 		}
 		return httpPackets;

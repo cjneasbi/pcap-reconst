@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -73,14 +74,12 @@ public class TcpReassembler {
 	}
 	
 	//start and end are indexes in the reconstructed output
-	//returns true iff there are missing packets in between the packets that
-	//contributed the start index and the end index in the reconstructed 
-	//output
-	public boolean errorBetween(int start, int end){
+	//left is start index, right is end index
+	private ImmutablePair<Integer, Integer> 
+		getStartandEndPacketIndexes(int start, int end){
 		if(start > end){
 			throw new RuntimeException("start: " + start + " must be <= end: " + end);
 		}
-		
 		List<Integer> positions = new ArrayList<Integer>(
 				packetPositions.keySet());
 		Collections.sort(positions);
@@ -95,11 +94,22 @@ public class TcpReassembler {
 			}
 		}
 		
+		return ImmutablePair.of(startPacket, endPacket);
+	}
+	
+	//start and end are indexes in the reconstructed output
+	//returns true iff there are missing packets in between the packets that
+	//contributed the start index and the end index in the reconstructed 
+	//output
+	public boolean errorBetween(int start, int end){
+		ImmutablePair<Integer, Integer> indexes = 
+				getStartandEndPacketIndexes(start, end);
+		
 		if(log.isDebugEnabled()){
-			log.debug("Looking for error between packets " + startPacket + 
-					" and " + endPacket);
-			log.debug(new String(orderedPackets.get(startPacket).getData()));
-			log.debug(new String(orderedPackets.get(endPacket).getData()));
+			log.debug("Looking for error between packets " + indexes.left + 
+					" and " + indexes.right);
+			log.debug(new String(orderedPackets.get(indexes.left).getData()));
+			log.debug(new String(orderedPackets.get(indexes.right).getData()));
 			String logval = "Error packets:\n";
 			for(int i = 0; i < orderedPackets.size(); i++){
 				if(orderedPackets.get(i) instanceof PlaceholderTcpPacket){
@@ -109,7 +119,7 @@ public class TcpReassembler {
 			log.debug(logval);
 		}
 		
-		for(int i = startPacket; i < endPacket; i++){
+		for(int i = indexes.left; i < indexes.right; i++){
 			if(orderedPackets.get(i) instanceof PlaceholderTcpPacket){
 				return true;
 			}
@@ -132,20 +142,10 @@ public class TcpReassembler {
 					+ beginIndex + " end index: " + endIndex);
 		}
 
-		TcpPacket startPacket = null, endPacket = null;
-
-		List<Integer> positions = new ArrayList<Integer>(
-				packetPositions.keySet());
-		Collections.sort(positions);
-
-		for (int pos : positions) {
-			if (startPacket == null && beginIndex < pos) {
-				startPacket = orderedPackets.get(packetPositions.get(pos));
-			}
-			if (endPacket == null && endIndex <= pos) {
-				endPacket = orderedPackets.get(packetPositions.get(pos));
-			}
-		}
+		ImmutablePair<Integer, Integer> indexes = 
+				getStartandEndPacketIndexes(beginIndex, endIndex);
+		TcpPacket startPacket = orderedPackets.get(indexes.left),
+				endPacket = orderedPackets.get(indexes.right);
 
 		if (startPacket != null) {
 			double startTS = startPacket.getTimestampSec() + (startPacket.getTimestampUSec()/1000000.0);		
