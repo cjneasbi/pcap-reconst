@@ -2,6 +2,10 @@ package pcap.reconst.beans;
 
 import java.net.InetAddress;
 
+import pcap.reconst.tcp.MessageMetadata;
+import pcap.reconst.tcp.TcpConnection;
+import pcap.reconst.tcp.TimestampPair;
+
 public class HTTPResponse extends HTTPMessage {
 
 	public HTTPResponse(byte[] data, TimestampPair ts, InetAddress src,

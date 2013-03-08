@@ -4,6 +4,10 @@ import java.net.InetAddress;
 
 import org.apache.commons.lang3.StringUtils;
 
+import pcap.reconst.tcp.MessageMetadata;
+import pcap.reconst.tcp.TcpConnection;
+import pcap.reconst.tcp.TimestampPair;
+
 public class HTTPMessage extends InputData {
 
 	protected TcpConnection conn;

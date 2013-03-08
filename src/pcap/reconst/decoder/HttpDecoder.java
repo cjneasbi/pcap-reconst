@@ -14,9 +14,9 @@ import org.apache.commons.logging.LogFactory;
 
 import pcap.reconst.beans.DecodedData;
 import pcap.reconst.beans.InputData;
-import pcap.reconst.beans.TcpConnection;
 import pcap.reconst.output.HttpDecodedOutput;
 import pcap.reconst.output.HttpOutput;
+import pcap.reconst.tcp.TcpConnection;
 
 public class HttpDecoder {
 	private static Log log = LogFactory.getLog(HttpDecoder.class);

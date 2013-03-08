@@ -17,9 +17,9 @@ import org.apache.commons.logging.LogFactory;
 
 import pcap.reconst.beans.HTTPRequest;
 import pcap.reconst.beans.HTTPResponse;
-import pcap.reconst.beans.MessageMetadata;
-import pcap.reconst.beans.TcpConnection;
-import pcap.reconst.reconstructor.TcpReassembler;
+import pcap.reconst.tcp.MessageMetadata;
+import pcap.reconst.tcp.TcpConnection;
+import pcap.reconst.tcp.TcpReassembler;
 
 public class Http {
 	private static Log log = LogFactory.getLog(Http.class);
@@ -48,7 +48,7 @@ public class Http {
 		return matchLocations;
 	}
 	
-	//TODO fix for the chunked encoding case
+	//TODO fix for the chunked encoding case containing a request in a chunk
 	private boolean isPipelined(TcpReassembler assembler){
 		Map<Integer, Boolean> matchLocations = this.buildMessageStartIndex(
 				assembler.getOrderedPacketData());
@@ -347,9 +347,7 @@ public class Http {
 			if (this.hasResponseData(flow)) {
 				int responseIndex = this.responseStart(flow);
 				request = getRequest(flow, responseIndex, assembler);
-				int responseLength = flow.length() - responseIndex;
-				response = getResponse(flow, responseLength, responseIndex,
-						assembler);
+				response = getResponse(flow, responseIndex, assembler);
 			} else {
 				request = getRequest(flow, flow.length(), assembler);
 			}
@@ -358,8 +356,8 @@ public class Http {
 		return null;
 	}
 
-	private HTTPResponse getResponse(String data, int responseLength,
-			int responseIndex, TcpReassembler assembler) {
+	private HTTPResponse getResponse(String data, int responseIndex, 
+			TcpReassembler assembler) {
 		byte[] response = data.substring(responseIndex).getBytes();
 		MessageMetadata mdata = assembler.getMessageMetadata(new String(
 				response));

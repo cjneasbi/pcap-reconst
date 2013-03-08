@@ -13,9 +13,9 @@ import org.apache.commons.logging.LogFactory;
 import pcap.reconst.Utils;
 import pcap.reconst.beans.DecodedData;
 import pcap.reconst.beans.Headers;
-import pcap.reconst.beans.TimestampPair;
 import pcap.reconst.compression.CompressionType;
 import pcap.reconst.compression.GzipZlibUtils;
+import pcap.reconst.tcp.TimestampPair;
 
 public class DecoderImpl implements Decoder {
 

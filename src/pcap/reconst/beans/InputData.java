@@ -7,6 +7,7 @@ package pcap.reconst.beans;
 import java.util.Arrays;
 
 import pcap.reconst.Utils;
+import pcap.reconst.tcp.TimestampPair;
 
 public class InputData {
 	protected byte[] data;
