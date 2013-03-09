@@ -10,9 +10,11 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.util.EntityUtils;
 
+import pcap.reconst.http.HttpDecoder;
 import pcap.reconst.http.HttpFlowParser;
 import pcap.reconst.http.datamodel.RecordedHttpEntityEnclosingRequest;
 import pcap.reconst.http.datamodel.RecordedHttpFlow;
@@ -66,9 +68,18 @@ public class HttpReconstructorExample {
 					RecordedHttpResponse resp = flow.getResponse();
 					if(resp != null){
 						System.out.println(resp.getStatusLine());
+						System.out.println("Raw response data:");
 						System.out.println(EntityUtils.toString(resp.getEntity()));
+						HttpEntity decodedent = HttpDecoder.decodeResponse(resp);
+						if(decodedent != null){
+							System.out.println("Decoded response data:");
+							System.out.println(EntityUtils.toString(decodedent));
+						}
 					}
 				}
+				
+				
+				
 			}
 			
 			/*

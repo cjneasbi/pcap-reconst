@@ -4,11 +4,8 @@
 
 package pcap.reconst.decoder;
 
-import pcap.reconst.beans.DecodedData;
-import pcap.reconst.beans.Headers;
-import pcap.reconst.tcp.TimestampPair;
+import org.apache.http.HttpEntity;
 
 public interface Decoder {
-	public DecodedData decode(byte[] encodedStream, Headers headers,
-			TimestampPair ts);
+	public HttpEntity decodeEntity(HttpEntity ent) throws Exception;
 }
