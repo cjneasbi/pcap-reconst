@@ -15,7 +15,7 @@ Requirements
 * [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 6 or greater
 * [commons-lang](http://commons.apache.org/lang/) 3.1
 * [commons-logging](http://commons.apache.org/logging/) 1.1.1
-* [HttpComponents-HttpCore](http://hc.apache.org/httpcomponents-core-ga/index.html) 4.2.3
+* [HttpComponents-HttpCore](http://hc.apache.org/httpcomponents-core-ga/index.html) 4.2.1
 * [jpcap](https://github.com/mgodave/Jpcap)
 
 __jpcap__ is a wrapper for libpcap or winpcap and requires compilation before use.
