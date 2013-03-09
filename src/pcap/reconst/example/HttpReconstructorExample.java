@@ -38,64 +38,61 @@ public class HttpReconstructorExample {
 	public static void main(String[] args) {
 		try {
 			HttpReconstructorExample fileDataReconstructor = new HttpReconstructorExample();
+			
+			//Reassemble the TCP streams.
 			Map<TcpConnection, TcpReassembler> map = fileDataReconstructor
 					.reconstruct(new File(args[0]), new JpcapReconstructor(
 							new PacketReassembler()));
+			
+			//Parse the HTTP flows from the streams.
 			HttpFlowParser httpParser = new HttpFlowParser(map);
 			Map<TcpConnection, List<RecordedHttpFlow>> flows = httpParser.parse();
 			
+			//Count the total number of extracted flows.
 			int flowcount = 0;
 			for(TcpConnection key : flows.keySet()){
 				flowcount += flows.get(key).size();
 			}
 			System.out.println("Parsed " + flowcount + " total flows.");
 			
+			//Print information about each flow.
 			for(TcpConnection key : flows.keySet()){
+				
+				//Each TCP stream may contain more than one 
+				//flow due to persistent connections.
 				List<RecordedHttpFlow> flowlist = flows.get(key);
 				for(RecordedHttpFlow flow : flowlist){
 					
 					HttpRequest req = flow.getRequest();
 					System.out.println(req.getRequestLine());
 					if(req instanceof RecordedHttpRequest){
+						//Request with no body.
 						System.out.println(((RecordedHttpRequest)req).getUrl());
 					} else {
+						//Request with a body.
 						RecordedHttpEntityEnclosingRequest rreq = 
 								(RecordedHttpEntityEnclosingRequest)req;
 						System.out.println(rreq.getUrl());
 						System.out.println(EntityUtils.toString(rreq.getEntity()));
 					}
 					
+					//A flow could be missing a response, we must check
+					//to see if the response is null.
 					RecordedHttpResponse resp = flow.getResponse();
 					if(resp != null){
 						System.out.println(resp.getStatusLine());
 						System.out.println("Raw response data:");
 						System.out.println(EntityUtils.toString(resp.getEntity()));
+						
+						//Content-Encoding is gzip or deflate, attempt to decode it.
 						HttpEntity decodedent = HttpDecoder.decodeResponse(resp);
 						if(decodedent != null){
 							System.out.println("Decoded response data:");
 							System.out.println(EntityUtils.toString(decodedent));
 						}
 					}
-				}
-				
-				
-				
+				}	
 			}
-			
-			/*
-			HttpDecoder httpDecoder = new HttpDecoder(httpPackets);
-			Map<TcpConnection, List<HttpDecodedOutput>> decodedPackets = httpDecoder
-					.decodeResponse();
-			for (TcpConnection tcpConnection : decodedPackets.keySet()) {
-				System.out.println(tcpConnection);
-				List<HttpDecodedOutput> decodedList = decodedPackets
-						.get(tcpConnection);
-				for (HttpDecodedOutput httpDecodedOutput : decodedList) {
-					System.out.println(new String(httpDecodedOutput
-							.getDecodedResponse().getData()));
-				}
-			}*/
-
 		} catch (Exception e) {
 			if (log.isErrorEnabled()) {
 				log.error(e);
