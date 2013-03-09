@@ -9,8 +9,6 @@ import org.apache.http.StatusLine;
 import org.apache.http.message.BasicHttpResponse;
 
 import pcap.reconst.tcp.MessageMetadata;
-import pcap.reconst.tcp.TcpConnection;
-import pcap.reconst.tcp.TimestampPair;
 
 public class RecordedHttpResponse extends BasicHttpResponse implements
 		RecordedHttpMessage {
@@ -37,11 +35,6 @@ public class RecordedHttpResponse extends BasicHttpResponse implements
 	}
 
 	@Override
-	public TimestampPair getTimestamps() {
-		return this.messdata.getTimestamps();
-	}
-
-	@Override
 	public double getStartTS() {
 		return this.messdata.getTimestamps().getStartTS();
 	}
@@ -49,11 +42,6 @@ public class RecordedHttpResponse extends BasicHttpResponse implements
 	@Override
 	public double getEndTS() {
 		return this.messdata.getTimestamps().getEndTS();
-	}
-
-	@Override
-	public TcpConnection getTcpConnection() {
-		return this.messdata.getTcpConnection();
 	}
 
 	@Override
