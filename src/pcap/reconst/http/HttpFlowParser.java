@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
 
 import pcap.reconst.http.datamodel.RecordedHttpFlow;
-import pcap.reconst.http.datamodel.RecordedHttpRequest;
 import pcap.reconst.http.datamodel.RecordedHttpResponse;
 import pcap.reconst.tcp.MessageMetadata;
 import pcap.reconst.tcp.TcpConnection;
@@ -342,7 +342,7 @@ public class HttpFlowParser {
 			log.debug("total length " + flow.length());
 		}
 		if (this.hasRequestData(flow)) {
-			RecordedHttpRequest request;
+			HttpRequest request;
 			RecordedHttpResponse response = null;
 
 			if (this.hasResponseData(flow)) {
@@ -357,13 +357,12 @@ public class HttpFlowParser {
 		return null;
 	}
 	
-	private RecordedHttpRequest getRequest(String data, int responseIndex, 
+	private HttpRequest getRequest(String data, int responseIndex, 
 			TcpReassembler assembler) throws IOException, HttpException{
 		String reqstring = data.substring(ZERO, responseIndex);
 		MessageMetadata mdata = assembler
 				.getMessageMetadata(new String(reqstring));
-		return (RecordedHttpRequest)RecordedHttpMessageParser.
-				parseRecordedRequest(reqstring, mdata);
+		return RecordedHttpMessageParser.parseRecordedRequest(reqstring, mdata);
 	}
 	
 	private RecordedHttpResponse getResponse(String data, int responseIndex, 

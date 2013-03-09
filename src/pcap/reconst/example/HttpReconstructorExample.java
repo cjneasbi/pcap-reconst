@@ -10,10 +10,11 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
 import org.apache.http.util.EntityUtils;
 
 import pcap.reconst.http.HttpFlowParser;
+import pcap.reconst.http.datamodel.RecordedHttpEntityEnclosingRequest;
 import pcap.reconst.http.datamodel.RecordedHttpFlow;
 import pcap.reconst.http.datamodel.RecordedHttpRequest;
 import pcap.reconst.http.datamodel.RecordedHttpResponse;
@@ -50,12 +51,18 @@ public class HttpReconstructorExample {
 			for(TcpConnection key : flows.keySet()){
 				List<RecordedHttpFlow> flowlist = flows.get(key);
 				for(RecordedHttpFlow flow : flowlist){
-					RecordedHttpRequest req = flow.getRequest();
-					System.out.println(req.getUrl());
-					if(req instanceof HttpEntityEnclosingRequest){
-						System.out.println(EntityUtils.toString(
-								((HttpEntityEnclosingRequest)req).getEntity()));
+					
+					HttpRequest req = flow.getRequest();
+					System.out.println(req.getRequestLine());
+					if(req instanceof RecordedHttpRequest){
+						System.out.println(((RecordedHttpRequest)req).getUrl());
+					} else {
+						RecordedHttpEntityEnclosingRequest rreq = 
+								(RecordedHttpEntityEnclosingRequest)req;
+						System.out.println(rreq.getUrl());
+						System.out.println(EntityUtils.toString(rreq.getEntity()));
 					}
+					
 					RecordedHttpResponse resp = flow.getResponse();
 					if(resp != null){
 						System.out.println(resp.getStatusLine());

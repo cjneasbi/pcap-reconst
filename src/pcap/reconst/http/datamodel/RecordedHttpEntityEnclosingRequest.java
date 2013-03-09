@@ -32,6 +32,20 @@ public class RecordedHttpEntityEnclosingRequest extends
 		super(method, uri, ver);
 		this.messdata = messdata;
 	}
+	
+	public String getUrl(){
+		String host = this.getFirstHeader("Host").getValue();
+		String retval = "http://";
+		if (host != null) {
+			retval += host;
+		} else {
+			retval += messdata.getDstIp().toString().replace("/", "");
+		}
+		if (messdata.getDstPort() != 80) {
+			retval = retval + ":" + messdata.getDstPort();
+		}
+		return retval + this.getRequestLine().getUri();
+	}
 
 	@Override
 	public TimestampPair getTimestamps() {

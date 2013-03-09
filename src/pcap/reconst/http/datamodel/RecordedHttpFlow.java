@@ -1,13 +1,15 @@
 package pcap.reconst.http.datamodel;
 
+import org.apache.http.HttpRequest;
+
 
 public class RecordedHttpFlow {
 
 	private byte[] rawdata;
-	private RecordedHttpRequest request;
+	private HttpRequest request;
 	private RecordedHttpResponse response;
 	
-	public RecordedHttpFlow(byte[] rawdata, RecordedHttpRequest request, 
+	public RecordedHttpFlow(byte[] rawdata, HttpRequest request, 
 			RecordedHttpResponse response) {
 		this.rawdata = rawdata;
 		this.request = request;
@@ -18,7 +20,7 @@ public class RecordedHttpFlow {
 		return rawdata;
 	}
 
-	public RecordedHttpRequest getRequest() {
+	public HttpRequest getRequest() {
 		return request;
 	}
 
