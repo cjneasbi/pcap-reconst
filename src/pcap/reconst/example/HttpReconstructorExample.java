@@ -11,7 +11,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
 import org.apache.http.util.EntityUtils;
 
 import pcap.reconst.http.HttpDecoder;
@@ -19,6 +18,7 @@ import pcap.reconst.http.HttpFlowParser;
 import pcap.reconst.http.datamodel.RecordedHttpEntityEnclosingRequest;
 import pcap.reconst.http.datamodel.RecordedHttpFlow;
 import pcap.reconst.http.datamodel.RecordedHttpRequest;
+import pcap.reconst.http.datamodel.RecordedHttpRequestMessage;
 import pcap.reconst.http.datamodel.RecordedHttpResponse;
 import pcap.reconst.tcp.JpcapReconstructor;
 import pcap.reconst.tcp.PacketReassembler;
@@ -63,7 +63,7 @@ public class HttpReconstructorExample {
 				List<RecordedHttpFlow> flowlist = flows.get(key);
 				for(RecordedHttpFlow flow : flowlist){
 					
-					HttpRequest req = flow.getRequest();
+					RecordedHttpRequestMessage req = flow.getRequest();
 					System.out.println(req.getRequestLine());
 					if(req instanceof RecordedHttpRequest){
 						//Request with no body.

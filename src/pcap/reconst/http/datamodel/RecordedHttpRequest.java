@@ -11,7 +11,7 @@ import pcap.reconst.tcp.TcpConnection;
 import pcap.reconst.tcp.TimestampPair;
 
 public class RecordedHttpRequest extends BasicHttpRequest implements
-		RecordedHttpMessage {
+		RecordedHttpRequestMessage {
 
 	protected MessageMetadata messdata;
 	

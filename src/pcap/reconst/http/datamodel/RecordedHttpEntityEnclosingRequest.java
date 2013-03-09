@@ -11,7 +11,7 @@ import pcap.reconst.tcp.TcpConnection;
 import pcap.reconst.tcp.TimestampPair;
 
 public class RecordedHttpEntityEnclosingRequest extends
-		BasicHttpEntityEnclosingRequest implements RecordedHttpMessage {
+		BasicHttpEntityEnclosingRequest implements RecordedHttpRequestMessage {
 
 	protected MessageMetadata messdata;
 	
