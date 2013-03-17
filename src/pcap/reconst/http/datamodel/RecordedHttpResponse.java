@@ -63,5 +63,23 @@ public class RecordedHttpResponse extends BasicHttpResponse implements
 	public int getDstPort() {
 		return this.messdata.getDstPort();
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof RecordedHttpResponse){
+			RecordedHttpResponse mess = (RecordedHttpResponse)obj;
+			return mess.getDstIp().equals(this.getDstIp()) &&
+					mess.getDstPort() == this.getDstPort() &&
+					mess.getSrcIp().equals(this.getSrcIp()) &&
+					mess.getSrcPort() == this.getSrcPort() &&
+					mess.getStartTS() == this.getStartTS() &&
+					mess.getEndTS() == this.getEndTS() &&
+					mess.getLocale().equals(this.getLocale()) &&
+					Utils.equals(mess.getAllHeaders(), this.getAllHeaders()) &&
+					Utils.equals(mess.getStatusLine(), this.getStatusLine()) &&
+					Utils.equals(mess.getEntity(), this.getEntity());			
+		}
+		return false;
+	}
 
 }

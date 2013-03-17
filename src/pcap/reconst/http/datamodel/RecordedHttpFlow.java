@@ -24,5 +24,16 @@ public class RecordedHttpFlow {
 	public RecordedHttpResponse getResponse() {
 		return response;
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof RecordedHttpFlow){
+			RecordedHttpFlow flow = (RecordedHttpFlow)obj;
+			return flow.rawdata.equals(this.rawdata) && 
+					flow.request.equals(this.request) &&
+					flow.response.equals(this.response);
+		}
+		return false;
+	}
 
 }

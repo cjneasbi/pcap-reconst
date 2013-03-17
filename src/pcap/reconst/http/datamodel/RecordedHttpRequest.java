@@ -74,5 +74,21 @@ public class RecordedHttpRequest extends BasicHttpRequest implements
 	public int getDstPort() {
 		return this.messdata.getDstPort();
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof RecordedHttpRequest){
+			RecordedHttpRequest mess = (RecordedHttpRequest)obj;
+			return mess.getDstIp().equals(this.getDstIp()) &&
+					mess.getDstPort() == this.getDstPort() &&
+					mess.getSrcIp().equals(this.getSrcIp()) &&
+					mess.getSrcPort() == this.getSrcPort() &&
+					mess.getStartTS() == this.getStartTS() &&
+					mess.getEndTS() == this.getEndTS() &&
+					Utils.equals(mess.getAllHeaders(), this.getAllHeaders()) &&
+					Utils.equals(mess.getRequestLine(), this.getRequestLine());		
+		}
+		return false;
+	}
 
 }
