@@ -87,8 +87,7 @@ public class RecordedHttpEntityEnclosingRequest extends
 					mess.getStartTS() == this.getStartTS() &&
 					mess.getEndTS() == this.getEndTS() &&
 					Utils.equals(mess.getAllHeaders(), this.getAllHeaders()) &&
-					Utils.equals(mess.getRequestLine(), this.getRequestLine()) &&
-					Utils.equals(mess.getEntity(), this.getEntity());
+					Utils.equals(mess.getRequestLine(), this.getRequestLine());
 		}
 		return false;
 	}
