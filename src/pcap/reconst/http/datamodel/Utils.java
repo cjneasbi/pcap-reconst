@@ -1,35 +1,13 @@
 package pcap.reconst.http.datamodel;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.RequestLine;
 import org.apache.http.StatusLine;
 
 public class Utils {
-	
-	private static Log log = LogFactory.getLog(Utils.class);
-
-	public static boolean equals(HttpEntity a, HttpEntity b){
-		try {
-			ByteArrayOutputStream astream = new ByteArrayOutputStream();
-			ByteArrayOutputStream bstream = new ByteArrayOutputStream();
-			a.writeTo(astream);
-			b.writeTo(bstream);
-			return astream.toByteArray().equals(bstream.toByteArray());
-		} catch (IOException e) {
-			if(log.isErrorEnabled()){
-				log.error("", e);
-			}
-		}
-		return false;
-	}
 	
 	public static boolean equals(RequestLine a, RequestLine b){
 		return a.getProtocolVersion().equals(b.getProtocolVersion()) &&

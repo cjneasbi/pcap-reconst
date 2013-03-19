@@ -2,6 +2,8 @@ package pcap.reconst.http.datamodel;
 
 import java.net.InetAddress;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.RequestLine;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
@@ -12,6 +14,8 @@ public class RecordedHttpEntityEnclosingRequest extends
 		BasicHttpEntityEnclosingRequest implements RecordedHttpRequestMessage {
 
 	protected MessageMetadata messdata;
+	
+	private static Log log = LogFactory.getLog(RecordedHttpEntityEnclosingRequest.class);
 	
 	public RecordedHttpEntityEnclosingRequest(RequestLine requestline, 
 			MessageMetadata messdata) {
@@ -78,18 +82,26 @@ public class RecordedHttpEntityEnclosingRequest extends
 	
 	@Override
 	public boolean equals(Object obj){
+		boolean retval = false;
 		if(obj instanceof RecordedHttpEntityEnclosingRequest){
 			RecordedHttpEntityEnclosingRequest mess = (RecordedHttpEntityEnclosingRequest)obj;
-			return mess.getDstIp().equals(this.getDstIp()) &&
+			try{
+				retval = mess.getDstIp().equals(this.getDstIp()) &&
 					mess.getDstPort() == this.getDstPort() &&
 					mess.getSrcIp().equals(this.getSrcIp()) &&
 					mess.getSrcPort() == this.getSrcPort() &&
 					mess.getStartTS() == this.getStartTS() &&
 					mess.getEndTS() == this.getEndTS() &&
 					Utils.equals(mess.getAllHeaders(), this.getAllHeaders()) &&
-					Utils.equals(mess.getRequestLine(), this.getRequestLine());
+					Utils.equals(mess.getRequestLine(), this.getRequestLine()) &&
+					mess.getEntity().getContent() == this.getEntity().getContent();
+			}  catch (Exception e){
+				if(log.isDebugEnabled()){
+					log.debug("Error retrieving content.", e);
+				}
+			}
 		}
-		return false;
+		return retval;
 	}
 
 }

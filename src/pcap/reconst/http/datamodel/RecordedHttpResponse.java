@@ -3,6 +3,8 @@ package pcap.reconst.http.datamodel;
 import java.net.InetAddress;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.ReasonPhraseCatalog;
 import org.apache.http.StatusLine;
@@ -14,6 +16,8 @@ public class RecordedHttpResponse extends BasicHttpResponse implements
 		RecordedHttpMessage {
 
 	protected MessageMetadata messdata;
+	
+	private static Log log = LogFactory.getLog(RecordedHttpResponse.class);
 	
 	public RecordedHttpResponse(StatusLine statusline, 
 			MessageMetadata messdata) {
@@ -66,20 +70,41 @@ public class RecordedHttpResponse extends BasicHttpResponse implements
 	
 	@Override
 	public boolean equals(Object obj){
+		boolean retval = false;
 		if(obj instanceof RecordedHttpResponse){
 			RecordedHttpResponse mess = (RecordedHttpResponse)obj;
-			return mess.getDstIp().equals(this.getDstIp()) &&
-					mess.getDstPort() == this.getDstPort() &&
-					mess.getSrcIp().equals(this.getSrcIp()) &&
-					mess.getSrcPort() == this.getSrcPort() &&
-					mess.getStartTS() == this.getStartTS() &&
-					mess.getEndTS() == this.getEndTS() &&
-					mess.getLocale().equals(this.getLocale()) &&
-					Utils.equals(mess.getAllHeaders(), this.getAllHeaders()) &&
-					Utils.equals(mess.getStatusLine(), this.getStatusLine()) &&
-					Utils.equals(mess.getEntity(), this.getEntity());			
+			try{
+				retval = mess.getDstIp().equals(this.getDstIp()) &&
+						mess.getDstPort() == this.getDstPort() &&
+						mess.getSrcIp().equals(this.getSrcIp()) &&
+						mess.getSrcPort() == this.getSrcPort() &&
+						mess.getStartTS() == this.getStartTS() &&
+						mess.getEndTS() == this.getEndTS() &&
+						mess.getLocale().equals(this.getLocale()) &&
+						Utils.equals(mess.getAllHeaders(), this.getAllHeaders()) &&
+						Utils.equals(mess.getStatusLine(), this.getStatusLine()) &&
+						mess.getEntity().getContent() == this.getEntity().getContent();
+				
+				if(log.isInfoEnabled() && !retval){
+					log.info(retval);
+					log.info("Not equals dstip: " + mess.getDstIp().equals(this.getDstIp()) +
+					" dstport: " + (mess.getDstPort() == this.getDstPort()) +
+					" srcip: " + mess.getSrcIp().equals(this.getSrcIp()) +
+					" srcport: " + (mess.getSrcPort() == this.getSrcPort()) +
+					" startts: " + (mess.getStartTS() == this.getStartTS()) +
+					" endts: " + (mess.getEndTS() == this.getEndTS()) +
+					" locale: " + mess.getLocale().equals(this.getLocale()) +
+					" headers: " + Utils.equals(mess.getAllHeaders(), this.getAllHeaders()) +
+					" statusline: " + Utils.equals(mess.getStatusLine(), this.getStatusLine()) +
+					" entity: " + (mess.getEntity().getContent() == this.getEntity().getContent()));
+				}
+			} catch (Exception e){
+				if(log.isDebugEnabled()){
+					log.debug("Error retrieving content.", e);
+				}
+			}
 		}
-		return false;
+		return retval;
 	}
 
 }
