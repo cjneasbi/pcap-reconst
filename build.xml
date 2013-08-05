@@ -9,7 +9,7 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
-    <property name="version.num" value="1.2" />          	
+    <property name="version.num" value="1.3" />          	
     
     <path id="pcap-reconst.classpath">
         <pathelement location="bin"/>
