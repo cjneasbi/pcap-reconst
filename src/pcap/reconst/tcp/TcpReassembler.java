@@ -43,13 +43,21 @@ public class TcpReassembler {
 	public boolean isEmpty() {
 		return orderedPackets.isEmpty();
 	}
-
-	public String getOrderedPacketData() {
+	
+	private void checkBuildPacketData(){
 		if (rebuildData || packetData == null) {
 			buildPacketData();
 			rebuildData = false;
 		}
+	}
+
+	public String getOrderedPacketData() {
+		checkBuildPacketData();
 		return packetData;
+	}
+	
+	public List<TcpPacket> getOrderedPackets(){
+		return this.orderedPackets;
 	}
 
 	public void buildPacketData() {
@@ -71,8 +79,8 @@ public class TcpReassembler {
 	
 	//start and end are indexes in the reconstructed output
 	//left is start index, right is end index
-	private ImmutablePair<Integer, Integer> 
-		getStartandEndPacketIndexes(int start, int end){
+	private ImmutablePair<Integer, Integer> getStartandEndPacketIndexes
+		(int start, int end){
 		if(start > end){
 			throw new RuntimeException("start: " + start + " must be <= end: " + end);
 		}
@@ -102,41 +110,25 @@ public class TcpReassembler {
 				getStartandEndPacketIndexes(start, end);
 		
 		if(log.isDebugEnabled()){
-			log.debug("Looking for error between packets " + indexes.left + 
-					" and " + indexes.right);
-			log.debug(new String(orderedPackets.get(indexes.left).getData()));
-			log.debug(new String(orderedPackets.get(indexes.right).getData()));
-			String logval = "Error packets:\n";
-			for(int i = 0; i < orderedPackets.size(); i++){
-				if(orderedPackets.get(i) instanceof PlaceholderTcpPacket){
-					logval += i + "\n";
-				}
-			}
-			log.debug(logval);
+			log.debug("Looking for error between start Packet: " + indexes.left + 
+					" end Packet: " + indexes.right);
 		}
+		
 		
 		for(int i = indexes.left; i < indexes.right; i++){
 			if(orderedPackets.get(i) instanceof PlaceholderTcpPacket){
+				if(log.isDebugEnabled()){
+					log.debug("Found placeholder packet at " + i + " Length: " + orderedPackets.get(i).getLength());
+				}
 				return true;
 			}
 		}
 		
 		return false;
 	}
-
-	public MessageMetadata getMessageMetadata(String needle) {
-		if (rebuildData || packetData == null) {
-			buildPacketData();
-			rebuildData = false;
-		}
-
-		int beginIndex = this.packetData.indexOf(needle);
-		int endIndex = beginIndex + needle.length();
-
-		if (log.isDebugEnabled()) {
-			log.debug("Find timestamp for:\n" + needle + "\nbegin index: "
-					+ beginIndex + " end index: " + endIndex);
-		}
+	
+	public MessageMetadata getMessageMetadata(int beginIndex, int endIndex) {
+		checkBuildPacketData();
 
 		ImmutablePair<Integer, Integer> indexes = 
 				getStartandEndPacketIndexes(beginIndex, endIndex);
@@ -159,10 +151,35 @@ public class TcpReassembler {
 		return null;
 	}
 
+	public MessageMetadata getMessageMetadata(String needle) {
+		checkBuildPacketData();
+
+		int beginIndex = this.packetData.indexOf(needle);
+		int endIndex = beginIndex + needle.length();
+
+		return this.getMessageMetadata(beginIndex, endIndex);
+	}
+	
+	public TcpConnection getTcpConnection(int beginIndex, int endIndex) {
+		MessageMetadata mdata = this.getMessageMetadata(beginIndex, endIndex);
+		if (mdata != null) {
+			return mdata.getTcpConnection();
+		}
+		return null;
+	}
+	
 	public TcpConnection getTcpConnection(String needle) {
 		MessageMetadata mdata = this.getMessageMetadata(needle);
 		if (mdata != null) {
 			return mdata.getTcpConnection();
+		}
+		return null;
+	}
+	
+	public TimestampPair getTimestampRange(int beginIndex, int endIndex) {
+		MessageMetadata mdata = this.getMessageMetadata(beginIndex, endIndex);
+		if (mdata != null) {
+			return mdata.getTimestamps();
 		}
 		return null;
 	}

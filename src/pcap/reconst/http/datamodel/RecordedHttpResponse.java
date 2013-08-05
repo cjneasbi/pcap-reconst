@@ -85,9 +85,8 @@ public class RecordedHttpResponse extends BasicHttpResponse implements
 						Utils.equals(mess.getStatusLine(), this.getStatusLine()) &&
 						mess.getEntity().getContent() == this.getEntity().getContent();
 				
-				if(log.isInfoEnabled() && !retval){
-					log.info(retval);
-					log.info("Not equals dstip: " + mess.getDstIp().equals(this.getDstIp()) +
+				if(log.isDebugEnabled() && !retval){
+					log.debug("Not equals dstip: " + mess.getDstIp().equals(this.getDstIp()) +
 					" dstport: " + (mess.getDstPort() == this.getDstPort()) +
 					" srcip: " + mess.getSrcIp().equals(this.getSrcIp()) +
 					" srcport: " + (mess.getSrcPort() == this.getSrcPort()) +

@@ -85,17 +85,19 @@ public class HttpReconstructorExample {
 						System.out.println(EntityUtils.toString(resp.getEntity()));
 						
 						//Content-Encoding is gzip or deflate, attempt to decode it.
-						HttpEntity decodedent = HttpDecoder.decodeResponse(resp);
-						if(decodedent != null){
-							System.out.println("Decoded response data:");
-							System.out.println(EntityUtils.toString(decodedent));
+						if(resp.getEntity().isRepeatable()){
+							HttpEntity decodedent = HttpDecoder.decodeResponse(resp);
+							if(decodedent != null){
+								System.out.println("Decoded response data:");
+								System.out.println(EntityUtils.toString(decodedent));
+							}
 						}
 					}
 				}	
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled()) {
-				log.error(e);
+				log.error("",e);
 			}
 			System.exit(-1);
 		}

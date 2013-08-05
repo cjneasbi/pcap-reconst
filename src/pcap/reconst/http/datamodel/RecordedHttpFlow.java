@@ -48,9 +48,12 @@ public class RecordedHttpFlow {
 				}
 			}
 			if(log.isDebugEnabled() && !retval){
-				log.debug("Not equals raw: " + flow.rawdata.equals(this.rawdata) + 
-						" request: " + flow.request.equals(this.request) + 
-						" response: " +flow.response.equals(this.response));
+				String val = "Not equals raw: " + flow.rawdata.equals(this.rawdata) + 
+						" request: " + flow.request.equals(this.request);
+				if(flow.response != null && this.response != null){
+					val += " response: " + flow.response.equals(this.response);
+				}
+				log.debug(val);
 			}
 		}
 		return retval;
