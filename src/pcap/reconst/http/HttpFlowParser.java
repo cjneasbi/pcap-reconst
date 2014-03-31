@@ -198,8 +198,8 @@ public class HttpFlowParser {
 								pRespSection.add(respchunk);
 							}
 							if(pReqSection.size() != pRespSection.size()){
-								if(log.isErrorEnabled()){
-									log.error("Unequal pipeline sections. Returning parsed stream section.");
+								if(log.isDebugEnabled()){
+									log.debug("Unequal pipeline sections. Returning parsed stream section.");
 								}
 								return retval;
 								/*if(log.isWarnEnabled()){
@@ -219,8 +219,8 @@ public class HttpFlowParser {
 								pRespSection.add(respchunk);
 							} else {
 								//throw new RuntimeException("Two adjacent responses in error.");
-								if(log.isErrorEnabled()){
-									log.error("Two adjacent responses in error. Returning parsed stream section.");
+								if(log.isDebugEnabled()){
+									log.debug("Two adjacent responses in error. Returning parsed stream section.");
 								}
 								return retval;
 							}
@@ -254,8 +254,8 @@ public class HttpFlowParser {
 							pRespSection.add(respchunk);
 						} else {
 							//throw new RuntimeException("Single unmatched response");
-							if(log.isErrorEnabled()){
-								log.error("Single unmatched response. Returning parsed stream section.");
+							if(log.isDebugEnabled()){
+								log.debug("Single unmatched response. Returning parsed stream section.");
 							}
 							return retval;
 						}
@@ -272,13 +272,13 @@ public class HttpFlowParser {
 					} else {
 						if(pReqSection.size() > pRespSection.size()){
 							//throw new RuntimeException("Incompleted pipelined response section.");
-							if(log.isErrorEnabled()){
-								log.error("Incomplete pipelined response section. Returning parsed stream section.");
+							if(log.isDebugEnabled()){
+								log.debug("Incomplete pipelined response section. Returning parsed stream section.");
 							}
 						} else {
 							//throw new RuntimeException("Incompleted pipelined request section.");
-							if(log.isErrorEnabled()){
-								log.error("Incomplete pipelined request section. Returning parsed stream section.");
+							if(log.isDebugEnabled()){
+								log.debug("Incomplete pipelined request section. Returning parsed stream section.");
 							}
 						}
 					}
@@ -465,8 +465,8 @@ public class HttpFlowParser {
 								// FlowBuf should be null, error
 							}
 						} else { //is request
-							if(log.isErrorEnabled()){
-								log.error("Two adjacent requests in non pipelined flow.  " +
+							if(log.isDebugEnabled()){
+								log.debug("Two adjacent requests in non pipelined flow.  " +
 										"Request starting at index " + matchIndexes.get(i) + " has no response.");
 							}
 							temp = new FlowBuf();
@@ -488,8 +488,8 @@ public class HttpFlowParser {
 								// FlowBuf should not be null, error
 							}
 						} else { // is response
-							if(log.isErrorEnabled()){
-								log.error("Two adjacent responses in non pipelined flow.  " +
+							if(log.isDebugEnabled()){
+								log.debug("Two adjacent responses in non pipelined flow.  " +
 										"Response starting at index " + matchIndexes.get(i+1) + " has no request.");
 							}
 							temp.respStart = matchIndexes.get(i);
@@ -600,14 +600,14 @@ public class HttpFlowParser {
 
 			List<FlowBuf> flows = null;
 			if(isPipelined(assembler)){
-				if(log.isInfoEnabled()){
-					log.info("Parsing pipelined stream. " + connection);
+				if(log.isDebugEnabled()){
+					log.debug("Parsing pipelined stream. " + connection);
 				}
 				flows = parsePipelinedFlows(flowbuf, assembler);
 				
 			} else {
-				if(log.isInfoEnabled()){
-					log.info("Parsing non-pipelined stream. " + connection);
+				if(log.isDebugEnabled()){
+					log.debug("Parsing non-pipelined stream. " + connection);
 				}
 				flows = splitFlows(flowbuf);
 			}
@@ -673,8 +673,8 @@ public class HttpFlowParser {
 				if(flows.size() > 0){
 					httpPackets.put(connection, flows);
 				} else {
-					if(log.isInfoEnabled()){
-						log.info("No HTTP flows found in stream: " + connection);
+					if(log.isDebugEnabled()){
+						log.debug("No HTTP flows found in stream: " + connection);
 					}
 				}
 				if (log.isDebugEnabled()) {
