@@ -43,9 +43,6 @@ public class RecordedHttpEntityEnclosingRequest extends
 		} else {
 			retval += messdata.getDstIp().toString().replace("/", "");
 		}
-		if (messdata.getDstPort() != 80) {
-			retval = retval + ":" + messdata.getDstPort();
-		}
 		return retval + this.getRequestLine().getUri();
 	}
 
